@@ -4,7 +4,8 @@ from message_broker import get_broker
 
 
 def lambda_handler(event, context):
-    """AWS Lambda entry point to fetch articles and send them to a message broker."""
+    """AWS Lambda entry point to fetch articles and
+    send them to a message broker."""
 
     query = event.get("query", "technology")
     # date_from = event.get("date_from", None)

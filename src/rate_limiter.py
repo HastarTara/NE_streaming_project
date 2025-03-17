@@ -14,7 +14,9 @@ def create_table_if_not_exists():
         dynamodb.meta.client.create_table(
             TableName=TABLE_NAME,
             KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
-            AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
+            AttributeDefinitions=[
+                {"AttributeName": "id", "AttributeType": "S"}
+            ],
             ProvisionedThroughput={
                 "ReadCapacityUnits": 1,
                 "WriteCapacityUnits": 1,

@@ -56,7 +56,8 @@ class TestKafkaBroker(unittest.TestCase):
     def test_send_message(self, mock_kafka_producer):
         # Create a MagicMock instance for the producer mock
         mock_producer = MagicMock()
-        mock_kafka_producer.return_value = mock_producer  # Ensure the mock producer is returned when KafkaProducer is instantiated
+        mock_kafka_producer.return_value = mock_producer  # Ensure the mock
+        #  producer is returned when KafkaProducer is instantiated
 
         # Instantiate the broker (which will use the mocked KafkaProducer)
         broker = KafkaBroker("test-topic")
@@ -75,7 +76,8 @@ class TestKafkaBroker(unittest.TestCase):
         # Ensure the send method was called with the correct arguments
         mock_producer.send.assert_called_with("test-topic", "Test message")
 
-        # Ensure flush was called to simulate Kafka's behavior after sending the message
+        # Ensure flush was called to simulate Kafka's behavior after
+        # sending the message
         mock_producer.flush.assert_called()
 
 
@@ -89,7 +91,8 @@ class TestGetBroker(unittest.TestCase):
     @patch("message_broker.BROKER_TYPE", "kafka")
     @patch("message_broker.KafkaProducer")  # Mock KafkaProducer here
     def test_get_broker_kafka(self, mock_kafka_producer):
-        # Mock the KafkaProducer return value to prevent actual Kafka connection
+        # Mock the KafkaProducer return value to prevent actual
+        # Kafka connection
         mock_kafka_producer.return_value = MagicMock()
 
         broker = get_broker()

@@ -49,7 +49,8 @@ def test_lambda_handler(
     # Check that the count matches the number of articles
     assert body["count"] == len(mock_articles)
 
-    # Verify that the fetch_guardian_articles was called with the correct parameters
+    # Verify that the fetch_guardian_articles was called with
+    #  the correct parameters
     mock_fetch_guardian_articles.assert_called_with(
         query="machine learning", page_size=10
     )
