@@ -29,10 +29,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install black flake8
 
-      # Run Black code formatter with line-length of 79
+      # Run Black code formatter with line-length of 79 and ensure changes are written
       - name: Run Black formatter
         run: |
-          black . --line-length 79
+          black . --line-length 79 --quiet --check  # --check lets us see what it would change
+
+      # If the previous Black step failed (i.e., code wasn't correct), fix it
+      - name: Run Black formatter (force write)
+        run: |
+          black . --line-length 79 --quiet  # This will force the code to be written
 
       # Run Flake8 linter
       - name: Run Flake8 linter
