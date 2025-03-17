@@ -24,7 +24,7 @@ jobs:
 
       - name: Run Black code formatter
         run: |
-          black . --line-length 79
+          black . --line-length 88
 
       - name: Run Flake8 linter
         run: |
