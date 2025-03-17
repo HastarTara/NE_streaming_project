@@ -7,7 +7,7 @@ def lambda_handler(event, context):
     """AWS Lambda entry point to fetch articles and send them to a message broker."""
 
     query = event.get("query", "technology")
-    date_from = event.get("date_from", None)
+    # date_from = event.get("date_from", None)
     page_size = event.get("page_size", 10)
 
     articles = fetch_guardian_articles(query=query, page_size=page_size)

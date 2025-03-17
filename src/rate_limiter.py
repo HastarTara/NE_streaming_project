@@ -11,12 +11,10 @@ TABLE_NAME = "request_tracker"
 def create_table_if_not_exists():
     existing_tables = dynamodb.meta.client.list_tables()["TableNames"]
     if TABLE_NAME not in existing_tables:
-        table = dynamodb.meta.client.create_table(
+        dynamodb.meta.client.create_table(
             TableName=TABLE_NAME,
             KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
-            AttributeDefinitions=[
-                {"AttributeName": "id", "AttributeType": "S"}
-            ],
+            AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
             ProvisionedThroughput={
                 "ReadCapacityUnits": 1,
                 "WriteCapacityUnits": 1,
