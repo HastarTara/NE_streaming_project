@@ -4,28 +4,37 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   lint:
     runs-on: ubuntu-latest
+
     steps:
+      # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Set up Python
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.8'
 
+      # Install dependencies (black and flake8)
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install black flake8
 
-      - name: Run Black code formatter
+      # Run Black code formatter with line-length of 79
+      - name: Run Black formatter
         run: |
-          black . --line-length 88
+          black . --line-length 79
 
+      # Run Flake8 linter
       - name: Run Flake8 linter
         run: |
-          flake8 .
+          flake8 --max-line-length=79
