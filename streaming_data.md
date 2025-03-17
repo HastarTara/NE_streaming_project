@@ -1,3 +1,11 @@
+TO DO:
+
+make the IP address for local kafka a .env variable 
+make a CI for black/flake8
+update the readme - add venv, flake8, kafka commands,
+
+
+
 # Streaming Data Project
 
 ## Context

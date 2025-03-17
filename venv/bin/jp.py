@@ -1,4 +1,4 @@
-#!/home/hastartara/Documents/guardian_streaming_project/venv/bin/python3
+#!/home/hastartara/Documents/NC_streaming_project/venv/bin/python3
 
 import sys
 import json

@@ -1,6 +1,7 @@
 annotated-types==0.7.0
 Authlib==1.4.1
 bandit==1.8.2
+black==25.1.0
 boto3==1.36.11
 botocore==1.36.11
 certifi==2025.1.31

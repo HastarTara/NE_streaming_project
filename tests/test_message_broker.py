@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from message_broker import SQSBroker, KafkaBroker, get_broker
+import botocore.exceptions
 
 
 class TestSQSBroker(unittest.TestCase):
@@ -23,40 +24,58 @@ class TestSQSBroker(unittest.TestCase):
 
     @patch("boto3.client")
     def test_create_queue_if_not_exists(self, mock_boto_client):
-        # Mocking the SQS client to simulate queue existence
+        # Mock the SQS client
         mock_sqs = MagicMock()
         mock_boto_client.return_value = mock_sqs
 
-        # Simulating a "QueueDoesNotExist" exception
-        mock_sqs.get_queue_url.side_effect = mock_sqs.exceptions.QueueDoesNotExist(
-            "Queue does not exist"
+        # Simulating a "QueueDoesNotExist" exception properly
+        mock_sqs.get_queue_url.side_effect = botocore.exceptions.ClientError(
+            {
+                "Error": {
+                    "Code": "AWS.SimpleQueueService.NonExistentQueue",
+                    "Message": "Queue does not exist",
+                }
+            },
+            "GetQueueUrl",
         )
 
-        # Simulate queue creation
+        # Simulate successful queue creation
         mock_sqs.create_queue.return_value = {
             "QueueUrl": "https://sqs.example.com/12345"
         }
 
         broker = SQSBroker()
         queue_url = broker.create_queue_if_not_exists()
+
+        # Assert the expected queue URL is returned
         self.assertEqual(queue_url, "https://sqs.example.com/12345")
 
 
 class TestKafkaBroker(unittest.TestCase):
-    @patch("kafka.KafkaProducer")
+    @patch("message_broker.KafkaProducer")
     def test_send_message(self, mock_kafka_producer):
-        # Mocking Kafka producer and its methods
+        # Create a MagicMock instance for the producer mock
         mock_producer = MagicMock()
-        mock_kafka_producer.return_value = mock_producer
+        mock_kafka_producer.return_value = mock_producer  # Ensure the mock producer is returned when KafkaProducer is instantiated
 
+        # Instantiate the broker (which will use the mocked KafkaProducer)
         broker = KafkaBroker("test-topic")
 
         # Test the send_message method
         response = broker.send_message("Test message")
+
+        # Assertions
         self.assertEqual(response, "Message sent to Kafka")
-        
-        # Check that send was called with the correct arguments
-        mock_producer.send.assert_called_with("test-topic", b"Test message")
+
+        # Print to check if the send method was called
+        print(
+            mock_producer.send.call_args_list
+        )  # This will show the actual call arguments
+
+        # Ensure the send method was called with the correct arguments
+        mock_producer.send.assert_called_with("test-topic", "Test message")
+
+        # Ensure flush was called to simulate Kafka's behavior after sending the message
         mock_producer.flush.assert_called()
 
 
@@ -68,7 +87,11 @@ class TestGetBroker(unittest.TestCase):
         self.assertIsInstance(broker, SQSBroker)
 
     @patch("message_broker.BROKER_TYPE", "kafka")
-    def test_get_broker_kafka(self):
+    @patch("message_broker.KafkaProducer")  # Mock KafkaProducer here
+    def test_get_broker_kafka(self, mock_kafka_producer):
+        # Mock the KafkaProducer return value to prevent actual Kafka connection
+        mock_kafka_producer.return_value = MagicMock()
+
         broker = get_broker()
         self.assertIsInstance(broker, KafkaBroker)
 

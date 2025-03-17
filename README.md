@@ -22,8 +22,8 @@ This guide walks you through the setup and execution of the Guardian Streaming P
      GUARDIAN_API_URL=https://content.guardianapis.com/search
      BROKER_TYPE=sqs  # or kafka if you're using Kafka locally
      SQS_QUEUE_URL=your_sqs_queue_url_here  # Leave blank if using Kafka
-     KAFKA_BROKER_URL=your_kafka_broker_url_here  # Only needed if using Kafka
-     KAFKA_TOPIC=your_kafka_topic_here  # Only needed if using Kafka
+     KAFKA_BROKER_URL=your_local_machines_IP_for_local_use  # Only needed if using Kafka
+     KAFKA_TOPIC=your_kafka_topic_name_here  # Only needed if using Kafka
      MAX_REQUESTS_PER_DAY=50  # Rate limit for API calls
      MESSAGE_TTL_DAYS=3  # Time to live for messages in the broker (SQS or Kafka)
      ```

@@ -1,13 +1,20 @@
-from config import SQS_QUEUE_URL, MESSAGE_TTL_DAYS, BROKER_TYPE
+from config import (
+    SQS_QUEUE_URL,
+    MESSAGE_TTL_DAYS,
+    BROKER_TYPE,
+    KAFKA_BROKER_URL,
+    KAFKA_TOPIC,
+)
 import boto3
 from kafka import KafkaProducer
+import botocore.exceptions
 
 
-class MessageBroker:
-    """Abstract message broker interface."""
+# class MessageBroker:
+#     """Abstract message broker interface."""
 
-    def send_message(self, message):
-        raise NotImplementedError
+#     def send_message(self, message):
+#         raise NotImplementedError
 
 
 class SQSBroker:
@@ -27,16 +34,22 @@ class SQSBroker:
         try:
             response = self.sqs.get_queue_url(QueueName="guardian_content_queue")
             return response["QueueUrl"]
-        except self.sqs.exceptions.QueueDoesNotExist:
-            try:
-                ttl_in_seconds = self.message_ttl_days * 24 * 60 * 60  # TTL in seconds
-                response = self.sqs.create_queue(
-                    QueueName="guardian_content_queue",
-                    Attributes={"MessageRetentionPeriod": str(ttl_in_seconds)},
-                )
-                return response["QueueUrl"]
-            except Exception as e:
-                raise
+        except botocore.exceptions.ClientError as e:
+            error_code = e.response.get("Error", {}).get("Code")
+            if error_code == "AWS.SimpleQueueService.NonExistentQueue":
+                try:
+                    ttl_in_seconds = (
+                        self.message_ttl_days * 24 * 60 * 60
+                    )  # TTL in seconds
+                    response = self.sqs.create_queue(
+                        QueueName="guardian_content_queue",
+                        Attributes={"MessageRetentionPeriod": str(ttl_in_seconds)},
+                    )
+                    return response["QueueUrl"]
+                except Exception as e:
+                    raise
+            else:
+                raise  # Re-raise unexpected errors
 
     def send_message(self, message):
         try:
@@ -48,10 +61,11 @@ class SQSBroker:
             raise
 
 
-class KafkaBroker(MessageBroker):
+class KafkaBroker:
     """Kafka implementation of the message broker."""
 
     def __init__(self, topic):
+        # Use KAFKA_BROKER_URL and KAFKA_TOPIC from the config
         self.producer = KafkaProducer(
             bootstrap_servers="localhost:9092",
             value_serializer=lambda v: v.encode("utf-8"),
@@ -59,8 +73,9 @@ class KafkaBroker(MessageBroker):
         self.topic = topic
 
     def send_message(self, message):
+        # Send the message to the Kafka topic
         self.producer.send(self.topic, message)
-        self.producer.flush()
+        self.producer.flush()  # Ensure the message is sent before returning
         return "Message sent to Kafka"
 
 
@@ -69,6 +84,7 @@ def get_broker():
     if BROKER_TYPE == "sqs":
         return SQSBroker()  # SQS will handle queue creation if it doesn't exist
     elif BROKER_TYPE == "kafka":
-        return KafkaBroker("default-topic")
+        # Use KAFKA_TOPIC from the config to dynamically select the Kafka topic
+        return KafkaBroker(KAFKA_TOPIC)
     else:
         raise ValueError(f"Unknown BROKER_TYPE: {BROKER_TYPE}")
