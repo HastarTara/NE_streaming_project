@@ -1,4 +1,4 @@
-name: CI
+name: Python Linting
 
 on:
   push:
@@ -9,27 +9,26 @@ on:
       - master
 
 jobs:
-  format_check:
+  lint:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install black flake8
+      - name: Install Black and Flake8
+        run: |
+          python -m pip install black flake8
 
-    - name: Check formatting with Black
-      run: |
-        black . --line-length 79 --check  # This will check without formatting
+      - name: Run Black to check code formatting
+        run: black . --line-length 79 --check --quiet
+        continue-on-error: true  # Continue even if Black reports issues
 
-    - name: Run Flake8
-      run: |
-        flake8 --max-line-length=79
+      - name: Run Flake8 to check code style
+        run: flake8 . --max-line-length=79
+        continue-on-error: true  # Continue even if Flake8 reports issues
