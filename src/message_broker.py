@@ -32,9 +32,7 @@ class SQSBroker:
     def create_queue_if_not_exists(self):
         """Create a new SQS queue if it doesn't exist and return its URL."""
         try:
-            response = self.sqs.get_queue_url(
-                QueueName="guardian_content_queue"
-            )
+            response = self.sqs.get_queue_url(QueueName="guardian_content_queue")
             return response["QueueUrl"]
         except botocore.exceptions.ClientError as e:
             error_code = e.response.get("Error", {}).get("Code")
@@ -45,13 +43,11 @@ class SQSBroker:
                     )  # TTL in seconds
                     response = self.sqs.create_queue(
                         QueueName="guardian_content_queue",
-                        Attributes={
-                            "MessageRetentionPeriod": str(ttl_in_seconds)
-                        },
+                        Attributes={"MessageRetentionPeriod": str(ttl_in_seconds)},
                     )
                     return response["QueueUrl"]
                 except Exception as e:
-                    raise
+                    raise e
             else:
                 raise  # Re-raise unexpected errors
 
@@ -84,11 +80,10 @@ class KafkaBroker:
 
 
 def get_broker():
-    """Factory method to return the correct broker based on environment variable."""
+    """Factory method to return the correct broker based
+    on environment variable."""
     if BROKER_TYPE == "sqs":
-        return (
-            SQSBroker()
-        )  # SQS will handle queue creation if it doesn't exist
+        return SQSBroker()  # SQS will handle queue creation if it doesn't exist
     elif BROKER_TYPE == "kafka":
         # Use KAFKA_TOPIC from the config to dynamically select the Kafka topic
         return KafkaBroker(KAFKA_TOPIC)
