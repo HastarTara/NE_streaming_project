@@ -17,7 +17,9 @@ def mock_articles():
 
 @patch("lambda_handler.fetch_guardian_articles")
 @patch("lambda_handler.get_broker")
-def test_lambda_handler(mock_get_broker, mock_fetch_guardian_articles, mock_articles):
+def test_lambda_handler(
+    mock_get_broker, mock_fetch_guardian_articles, mock_articles
+):
     # Mock the articles that the fetch_guardian_articles function will return
     mock_fetch_guardian_articles.return_value = mock_articles
 

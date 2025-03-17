@@ -18,4 +18,6 @@ KAFKA_TOPIC = os.getenv("KAFKA_TOPIC")
 
 # Performance limits
 MAX_REQUESTS_PER_DAY = int(os.getenv("MAX_REQUESTS_PER_DAY", 50))
-MESSAGE_TTL_DAYS = int(os.getenv("MESSAGE_TTL_DAYS", 3))  # Days before messages expire
+MESSAGE_TTL_DAYS = int(
+    os.getenv("MESSAGE_TTL_DAYS", 3)
+)  # Days before messages expire

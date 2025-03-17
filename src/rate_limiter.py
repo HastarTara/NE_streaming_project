@@ -14,8 +14,13 @@ def create_table_if_not_exists():
         table = dynamodb.meta.client.create_table(
             TableName=TABLE_NAME,
             KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
-            AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
-            ProvisionedThroughput={"ReadCapacityUnits": 1, "WriteCapacityUnits": 1},
+            AttributeDefinitions=[
+                {"AttributeName": "id", "AttributeType": "S"}
+            ],
+            ProvisionedThroughput={
+                "ReadCapacityUnits": 1,
+                "WriteCapacityUnits": 1,
+            },
         )
         print(f"Creating DynamoDB table {TABLE_NAME}...")
         waiter = dynamodb.meta.client.get_waiter("table_exists")

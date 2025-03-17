@@ -48,7 +48,8 @@ def test_fetch_guardian_articles_error(mock_can_request, mock_get):
 
     with patch("guardian_api.GUARDIAN_API_KEY", "mocked-api-key"):
         with pytest.raises(
-            Exception, match="Error fetching articles: 500 Internal Server Error"
+            Exception,
+            match="Error fetching articles: 500 Internal Server Error",
         ):
             fetch_guardian_articles(query="technology", page_size=2)
 
