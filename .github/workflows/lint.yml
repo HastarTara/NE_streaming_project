@@ -1,45 +1,35 @@
-name: Lint and Format Code
+name: CI
 
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
-  lint:
+  format_check:
     runs-on: ubuntu-latest
-
+    
     steps:
-      # Checkout the repository
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      # Set up Python
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.8'
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
 
-      # Install dependencies (black and flake8)
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install black flake8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install black flake8
 
-      # Run Black code formatter with line-length of 79 and ensure changes are written
-      - name: Run Black formatter
-        run: |
-          black . --line-length 79 --quiet --check  # --check lets us see what it would change
+    - name: Check formatting with Black
+      run: |
+        black . --line-length 79 --check  # This will check without formatting
 
-      # If the previous Black step failed (i.e., code wasn't correct), fix it
-      - name: Run Black formatter (force write)
-        run: |
-          black . --line-length 79 --quiet  # This will force the code to be written
-
-      # Run Flake8 linter
-      - name: Run Flake8 linter
-        run: |
-          flake8 --max-line-length=79
+    - name: Run Flake8
+      run: |
+        flake8 --max-line-length=79
