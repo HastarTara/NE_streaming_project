@@ -11,4 +11,6 @@ Thumbs.db
 coverage.xml
 *.coveragerc
 *.log
-/data
+data
+package
+.pytest_cache
