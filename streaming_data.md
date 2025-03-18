@@ -1,13 +1,3 @@
-TO DO:
-
-figure out the variable/imports for this kafka biz.... .env/docker-compose.yml, config.py
-
-update the readme - add venv info, flake8 info local and CI, kafka commands to show things in the broker.
-
-possibly convert the docker-compose TTL days to hours, find a solution to limit to 50 requests a day (maybe easy to do as limit to only while kafka is running?)
-
-mentioned stretch project? i.e. kafka
-
 # Streaming Data Project
 
 ## Context
