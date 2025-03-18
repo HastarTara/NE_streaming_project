@@ -18,12 +18,12 @@ This guide walks you through the setup and execution of the Guardian Streaming P
 4. **.env File Setup**:
    - Create a `.env` file in the root of the project directory and fill it with the following values:
      ```dotenv
-     GUARDIAN_API_KEY=your_guardian_api_key_here #required
+     GUARDIAN_API_KEY=your_guardian_api_key_here # required
      GUARDIAN_API_URL=https://content.guardianapis.com/search #required
      BROKER_TYPE=sqs  # required - can be either 'sqs' or 'kafka'
-     SQS_QUEUE_URL=your_sqs_queue_url_here  # optional as the app will make one, or you can provide one if you have a specific sqs queue you want used
-     KAFKA_LOCAL_IP=your_local_machines_IP  # required if using Kafka
-     KAFKA_TOPIC=your_kafka_topic_name_here  # required default topic name
+     SQS_QUEUE_URL=your_sqs_queue_url_here  # optional - leave blank as the app will make one, or you can provide one if you have a specific sqs queue you want used
+     KAFKA_LOCAL_IP=your_local_machines_IP # required if using Kafka
+     KAFKA_TOPIC=your_kafka_topic_name_here  # required default topic name if using kafka
      MAX_REQUESTS_PER_DAY=50  # defaults to 50
      MESSAGE_TTL_DAYS=3  # Time to live for messages in the broker (SQS or Kafka) - defaults to 3 for sqs - for kafka set the hours in docker-compose.yml which are defaulted to 76
 
@@ -125,8 +125,8 @@ This guide walks you through the setup and execution of the Guardian Streaming P
      ```bash
      docker-compose up -d
      ```
-   - This will start Kafka and Zookeeper in the background. 
-   - Now run the same commands as before.
+   - This will start Kafka in the background. 
+   - Now run the same commands as before in step 6.
 
    - Note: You may need to set the correct ownership and permissions on the data directory volume when Docker sets up Kafka. If you encounter permission issues, use the following commands:
      ```bash
