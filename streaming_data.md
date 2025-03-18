@@ -1,10 +1,12 @@
 TO DO:
 
-make the IP address for local kafka a .env variable 
-make a CI for black/flake8
-update the readme - add venv, flake8, kafka commands,
+figure out the variable/imports for this kafka biz.... .env/docker-compose.yml, config.py
 
+update the readme - add venv info, flake8 info local and CI, kafka commands to show things in the broker.
 
+possibly convert the docker-compose TTL days to hours, find a solution to limit to 50 requests a day (maybe easy to do as limit to only while kafka is running?)
+
+mentioned stretch project? i.e. kafka
 
 # Streaming Data Project
 

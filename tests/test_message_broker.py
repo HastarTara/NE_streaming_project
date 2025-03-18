@@ -68,11 +68,6 @@ class TestKafkaBroker(unittest.TestCase):
         # Assertions
         self.assertEqual(response, "Message sent to Kafka")
 
-        # Print to check if the send method was called
-        print(
-            mock_producer.send.call_args_list
-        )  # This will show the actual call arguments
-
         # Ensure the send method was called with the correct arguments
         mock_producer.send.assert_called_with("test-topic", "Test message")
 

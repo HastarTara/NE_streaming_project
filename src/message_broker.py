@@ -2,19 +2,11 @@ from config import (
     SQS_QUEUE_URL,
     MESSAGE_TTL_DAYS,
     BROKER_TYPE,
-    KAFKA_BROKER_URL,
     KAFKA_TOPIC,
 )
 import boto3
 from kafka import KafkaProducer
 import botocore.exceptions
-
-
-# class MessageBroker:
-#     """Abstract message broker interface."""
-
-#     def send_message(self, message):
-#         raise NotImplementedError
 
 
 class SQSBroker:
@@ -68,6 +60,7 @@ class KafkaBroker:
         # Use KAFKA_BROKER_URL and KAFKA_TOPIC from the config
         self.producer = KafkaProducer(
             bootstrap_servers="localhost:9092",
+            # change back to localhost:9092
             value_serializer=lambda v: v.encode("utf-8"),
         )
         self.topic = topic
