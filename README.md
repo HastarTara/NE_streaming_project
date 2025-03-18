@@ -47,7 +47,7 @@ This guide walks you through the setup and execution of the Guardian Streaming P
    - On Windows, it should be available by default with Python.
 
    - Create a virtual environment:
-   - Once `venv` is available, create a virtual environment in your project directory:
+   - Once `venv` is available, create a virtual environment in your project directory (the command might be python3 depending on your setup):
       ```bash
       python -m venv venv
       ```
