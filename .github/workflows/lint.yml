@@ -30,4 +30,4 @@ jobs:
 
       - name: Run Flake8 to check code style
         run: flake8 . --max-line-length=79  # Ensures Flake8 passes
-        continue-on-error: true 
+        continue-on-error: true # false this line as needed
